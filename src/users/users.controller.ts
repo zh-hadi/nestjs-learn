@@ -1,36 +1,32 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 
-class CreateUserDto {
-    name: string;
-    email: string;
-    age: number;
-}
+import { CreateUserDto } from './dto/createUserDto';
+import type { User } from './interfaces/users.interface';
 
 @Controller('users')
 export class UsersController {
     constructor(private usersService: UsersService){}
 
     @Get()
-    getAllUsers(){
+    getAllUsers(): User[]{
         return this.usersService.getAll()
     }
 
     @Post()
-    @HttpCode(404)
-    create(@Body() createUserDto: CreateUserDto) {
+    create(@Body() createUserDto: CreateUserDto): User {
         const user = this.usersService.createUser(createUserDto);
         return user;
     }
 
     @Put(":id")
-    update(@Param('id') id: string, @Body()createUserDto: CreateUserDto){
+    update(@Param('id') id: string, @Body()createUserDto: CreateUserDto): User{
         const user = this.usersService.updateUser(Number(id), createUserDto);
         return user;
     }
 
     @Patch(":id")
-    patchUser(@Param('id') id: string, @Body() body: Partial<{name: string, email: string, age: number}>){
+    patchUser(@Param('id') id: string, @Body() body: Partial<CreateUserDto>){
         const user = this.usersService.patchUser(Number(id), body);
         return user;
     }
