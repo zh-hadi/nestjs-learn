@@ -11,11 +11,19 @@ import { MiddlewareMiddleware } from './middleware/middleware.middleware';
 import { EvService } from './ev/ev.service';
 import { ConfigModule } from '@nestjs/config';
 import { EvControllerController } from './ev-controller/ev-controller.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { StudentModule } from './student/student.module';
 
 @Module({
-  imports: [UsersModule, CustomerModule, CustomersModule, ConfigModule.forRoot({
-    isGlobal: true
-  })],
+  imports: [
+    UsersModule, 
+    CustomerModule, 
+    CustomersModule, 
+    ConfigModule.forRoot({
+      isGlobal: true
+    }), 
+    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule
+  ],
   controllers: [AppController, UserRoleController, DatabaseController, EvControllerController],
   providers: [AppService, DatabaseService, EvService],
 })
