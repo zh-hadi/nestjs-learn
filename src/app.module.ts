@@ -1,13 +1,26 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { CustomerModule } from './customer/customer.module';
 import { CustomersModule } from './customers/customers.module';
+import { UserRoleController } from './user-role/user-role.controller';
+import { DatabaseService } from './database/database.service';
+import { DatabaseController } from './database/database.controller';
+import { MiddlewareMiddleware } from './middleware/middleware.middleware';
+import { EvService } from './ev/ev.service';
+import { ConfigModule } from '@nestjs/config';
+import { EvControllerController } from './ev-controller/ev-controller.controller';
 
 @Module({
-  imports: [UsersModule, CustomerModule, CustomersModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [UsersModule, CustomerModule, CustomersModule, ConfigModule.forRoot({
+    isGlobal: true
+  })],
+  controllers: [AppController, UserRoleController, DatabaseController, EvControllerController],
+  providers: [AppService, DatabaseService, EvService],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(MiddlewareMiddleware).forRoutes('*');
+  }
+}
