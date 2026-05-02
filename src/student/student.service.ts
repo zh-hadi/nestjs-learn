@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Student, StudentDocument } from './student.schema';
 import { Model } from 'mongoose';
@@ -12,8 +12,13 @@ export class StudentService {
 
     async create(data: Partial<Student>):Promise<Student>
     {
-        const newStudent = new this.studentModel(data);
-        return newStudent.save();
+        try{
+            const newStudent = new this.studentModel(data);
+            return newStudent.save();
+        }catch(error) {
+            console.log("error happen here")
+            throw new BadRequestException(error)
+        }
     }
     async getAll(): Promise<Student[]>
     {

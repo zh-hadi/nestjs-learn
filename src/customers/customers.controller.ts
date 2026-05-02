@@ -6,19 +6,31 @@ import { UppercasePipe } from 'src/common/pipes/uppercase/uppercase.pipe';
 import { AuthGuard } from 'src/guard/auth/auth.guard';
 // import { EvService } from './../ev/ev.service';
 
+function Log(
+  target: any,
+  propertyKey: string,
+  descriptor: PropertyDescriptor
+){
+  console.log(propertyKey)
+}
+
 @Controller('customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
-  @Post()
-  @UseGuards(AuthGuard)
-  create(@Body('name', new UppercasePipe()) name: string) {
-    // console.log(this.evService.getDbUrl());
-    return `The name is: ${name}`;
-  }
-  // create(@Body() createCustomerDto: CreateCustomerDto) {
-  //   return this.customersService.create(createCustomerDto);
+  // @Post()
+  // @UseGuards(AuthGuard)
+  // create(@Body('name', new UppercasePipe()) name: string) {
+  //   // console.log(this.evService.getDbUrl());
+  //   return `The name is: ${name}`;
   // }
+  @Log
+  @Post()
+  create(@Body() createCustomerDto: CreateCustomerDto) {
+    // return "hi i am working here";
+    // return createCustomerDto;
+    return this.customersService.create(createCustomerDto);
+  }
 
   @Get()
   findAll() {
@@ -27,7 +39,7 @@ export class CustomersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.customersService.findOne(+id);
+    return this.customersService.findOne(id);
   }
 
   @Patch(':id')
