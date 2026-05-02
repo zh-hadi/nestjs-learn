@@ -15,6 +15,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { StudentModule } from './student/student.module';
 import { EmployeeModule } from './employee/employee.module';
 import { PipeController } from './pipe/pipe.controller';
+import { UserModule } from './user/user.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -24,7 +26,18 @@ import { PipeController } from './pipe/pipe.controller';
     ConfigModule.forRoot({
       isGlobal: true
     }), 
-    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule, EmployeeModule
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.SUPABASE_DB,
+    
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule, EmployeeModule, UserModule
   ],
   controllers: [AppController, UserRoleController, DatabaseController, EvControllerController, PipeController],
   providers: [AppService, DatabaseService, EvService],
