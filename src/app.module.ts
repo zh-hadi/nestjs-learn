@@ -13,6 +13,8 @@ import { ConfigModule } from '@nestjs/config';
 import { EvControllerController } from './ev-controller/ev-controller.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { StudentModule } from './student/student.module';
+import { EmployeeModule } from './employee/employee.module';
+import { PipeController } from './pipe/pipe.controller';
 
 @Module({
   imports: [
@@ -22,9 +24,9 @@ import { StudentModule } from './student/student.module';
     ConfigModule.forRoot({
       isGlobal: true
     }), 
-    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule
+    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule, EmployeeModule
   ],
-  controllers: [AppController, UserRoleController, DatabaseController, EvControllerController],
+  controllers: [AppController, UserRoleController, DatabaseController, EvControllerController, PipeController],
   providers: [AppService, DatabaseService, EvService],
 })
 export class AppModule implements NestModule{
