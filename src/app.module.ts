@@ -17,9 +17,20 @@ import { EmployeeModule } from './employee/employee.module';
 import { PipeController } from './pipe/pipe.controller';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaModule } from './prisma/prisma.module';
+import { BookModule } from './book/book.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      graphiql: true,
+    }),
     UsersModule, 
     CustomerModule, 
     CustomersModule, 
@@ -37,7 +48,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    MongooseModule.forRoot(process.env.DATABASE_URL!), StudentModule, EmployeeModule, UserModule
+    MongooseModule.forRoot(process.env.DATABASE_URL_MONGO!), StudentModule, EmployeeModule, UserModule, PrismaModule, BookModule
   ],
   controllers: [AppController, UserRoleController, DatabaseController, EvControllerController, PipeController],
   providers: [AppService, DatabaseService, EvService],
